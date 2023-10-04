@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Productos e-commerce</title>
+</head>
+
+<body>
+    <h1>Lista de Productos</h1>
+    <ul>
+       <div id="product-container">
+    {{#each producto}}
+    <li>{{this.name}}, {{this.category}}, {{this.price}}, {{this.stock}}</li>
+    {{/each}}
+</div>
+    </ul>
+    <p>Página actual: {{currentPage}} / {{totalPages}}</p>
+    {{#if showPreviousPageLink}}
+    <a href="/products?page={{currentPage - 1}}">Anterior</a>
+    {{/if}}
+    {{#if showNextPageLink}}
+    <a href="/products?page={{currentPage + 1}}">Siguiente</a>
+    {{/if}}
+
+    <script src="../public/product.js"></script>
+</body>
+
+</html>
