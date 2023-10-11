@@ -71,62 +71,12 @@ router.get("/failregister", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password, productName } = req.body;
-        if (!email || !password) return res.status(400).render("login", { error: "Valores erroneos" });
+router.post("/login", passport.authenticate("login", {
+    successRedirect: "/api/sessions/profile",
+    failureRedirect: "/login", // Redirect to the login page on failure
+    failureFlash: true, // Enable flash messages for failure
+}));
 
-        const user = await usuario.findOne({ email }, { first_name: 1, last_name: 1, age: 1, password: 1, email: 1 });
-
-        if (!user) {
-            return res.status(400).render("login", { error: "Usuario no encontrado" });
-        }
-
-        if (!isValidatePassword(user, password)) {
-            return res.status(401).render("login", { error: "Error en password" });
-        }
-
-        req.session.user = {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            age: user.age,
-        };
-        res.redirect("/api/sessions/profile");
-    } catch (error) {
-        console.error('Error en la ruta "/login":', error);
-        res.status(500).send('Error interno del servidor.');
-    }
-});
-
-
-
-
-/* router.post("/login", (req, res) => {
-    const { email, password } = req.body
-    if (email == "garzamora@food.com" && password == "garzapass") {
-        let token = jwt.sign({ email, password }, "garzaSecret", { expiresIn: "24h" })
-        res.cookie("garzaCookieToken", token, {
-            maxAge: 60 * 60 * 1000,
-            httpOnly: true
-        }).send({ message: "Logueado existosamente a la página de Garza Mora" })
-    }
-})
- */
-/*
-router.post("/login", passport.authenticate("login", { failureRedirect: "/faillogin" }), async (req, res) => {
-    if (!req.session.user) {
-        return res.status(400).send("Usuario no encontrado")
-    }
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age
-    }
-    res.send({ status: "success", payload: req.user })
-}
-) */
 
 // Ruta para cerrar sesión
 router.post("/logout", async (req, res) => {
