@@ -73,8 +73,8 @@ router.get("/failregister", async (req, res) => {
 
 router.post("/login", passport.authenticate("login", {
     successRedirect: "/api/sessions/profile",
-    failureRedirect: "/login", // Redirect to the login page on failure
-    failureFlash: true, // Enable flash messages for failure
+    failureRedirect: "/login", 
+    failureFlash: true, // 
 }));
 
 
